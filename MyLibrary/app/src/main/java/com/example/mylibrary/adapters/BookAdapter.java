@@ -1,5 +1,6 @@
 package com.example.mylibrary.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,12 @@ import com.example.mylibrary.models.Book;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ArrayList<Book> bookList;
     OnBookItemClick onBookItemClick;
 
-    public MyAdapter(ArrayList<Book> bookList, OnBookItemClick onBookItemClick) {
+    public BookAdapter(ArrayList<Book> bookList, OnBookItemClick onBookItemClick) {
         this.bookList = bookList;
         this.onBookItemClick = onBookItemClick;
     }
@@ -30,6 +31,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_cell, parent, false);
         BookViewHolder bookViewHolder = new BookViewHolder(view);
+
+        Log.e("BookAdapter", "onCreateViewHolder");
+
         return bookViewHolder;
     }
 
