@@ -10,9 +10,9 @@ import java.util.List;
 
 public class GetAllBooksTask extends AsyncTask<Void,Void, List<BookItem>> {
    private BookDataBase bookDataBase;
-   private BookRepository.OnSuccesListener listener;
+   private BookRepository.OnGetBookListener listener;
 
-    public GetAllBooksTask(BookDataBase bookDataBase, BookRepository.OnSuccesListener listener) {
+    public GetAllBooksTask(BookDataBase bookDataBase, BookRepository.OnGetBookListener listener) {
         this.bookDataBase = bookDataBase;
         this.listener = listener;
     }
@@ -25,6 +25,6 @@ public class GetAllBooksTask extends AsyncTask<Void,Void, List<BookItem>> {
     @Override
     protected void onPostExecute(List<BookItem> bookItems) {
         super.onPostExecute(bookItems);
-        listener.onSuccess();
+        listener.onSuccess(bookItems);
     }
 }
