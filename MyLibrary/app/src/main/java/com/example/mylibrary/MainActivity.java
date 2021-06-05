@@ -6,7 +6,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
+import com.example.mylibrary.models.Book;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+    ArrayList<Book> books = new ArrayList<Book>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
