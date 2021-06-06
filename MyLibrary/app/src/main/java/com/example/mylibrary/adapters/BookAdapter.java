@@ -25,6 +25,10 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.onBookItemClick = onBookItemClick;
     }
 
+    public BookAdapter(ArrayList<Book> bookList) {
+        this.bookList = bookList;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
