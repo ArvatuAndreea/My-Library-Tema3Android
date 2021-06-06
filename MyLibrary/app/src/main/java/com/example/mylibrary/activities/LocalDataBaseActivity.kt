@@ -69,6 +69,34 @@ class LocalDataBaseActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupRecyclerView() {
+        val recyclerView: RecyclerView = findViewById(R.id.rv_books)
+        val layoutManager: LinearLayoutManager =
+                LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.LayoutManager = layoutManager
+
+        bookAdapter = BookAdapter(bookList)
+        recyclerView.adapter = bookAdapter
+    }
+
+    fun getBooks() {
+        database.child(ARG_FB_BOOK).get().addOnSuccessListener { dataSnapshot ->
+            Log.i("firebase", "Got value ${dataSnapshot.value}")
+            bookList.clear()
+
+            dataSnapshot.children.forEach { itemSnapshot ->
+                val bookItemFB = itemSnapshot.getValue(BookItemElementFB::class)
+                bookItemFB?.convert()?.let { bookItem ->
+                    bookList.add(bookItem.convert())
+                }
+            }
+
+            bookAdapter?.notifyDataSetChanged()
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+    }
+
     private fun insertBook() {
         val title = editTextTitle?.text?.toString() ?: return
         when (title.isEmpty()) {
@@ -110,22 +138,12 @@ class LocalDataBaseActivity : AppCompatActivity() {
 
 
 
-    private fun setupRecyclerView() {
-        val recyclerView: RecyclerView = findViewById(R.id.rv_books)
-        val layoutManager: LinearLayoutManager =
-                LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView.LayoutManager = layoutManager
-
-        bookAdapter = BookAdapter(bookList)
-        recyclerView.adapter = bookAdapter
-    }
-
-    fun getBooks() {
-        database.child(ARG_FB_BOOK).get().addOnSuccessListener { dataSnapshot ->
-            Log.i("firebase", "Got value ${dataSnapshot.value}")
+    val bookListener = object : ValueEventListener {
+        fun onDataChange(dataSnapshot: DataSnapshot) {
             bookList.clear()
 
-            dataSnapshot.children.forEach { itemSnapshot ->
+            val booksSnapshot = dataSnapshot.child(ARG_FB_BOOK)
+            booksSnapshot?.children?.forEach { itemSnapshot ->
                 val bookItemFB = itemSnapshot.getValue(BookItemElementFB::class)
                 bookItemFB?.convert()?.let { bookItem ->
                     bookList.add(bookItem.convert())
@@ -133,9 +151,12 @@ class LocalDataBaseActivity : AppCompatActivity() {
             }
 
             bookAdapter?.notifyDataSetChanged()
-        }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
+            // ...
+        }
+
+        fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
         }
     }
-
 }
